@@ -35,6 +35,26 @@ class MenuItem
 #define MAX_GRINDING_TIME 20000 // 20 seconds diff
 #define GRINDING_FAILED_WEIGHT_TO_RESET 150 // force on balance need to be measured to reset grinding
 
+// Parameter validation limits
+#define MAX_OFFSET 10.0
+#define MIN_OFFSET -10.0
+#define MAX_CUP_WEIGHT 200.0
+#define MIN_CUP_WEIGHT 10.0
+#define MAX_SET_WEIGHT 100.0
+#define MIN_SET_WEIGHT 5.0
+#define MAX_AUTO_OFFSET_CHANGE 5.0
+
+// Storage settings structure for data integrity
+struct ScaleSettings {
+  int16_t offsetTenths;
+  int16_t cupWeightTenths;
+  int16_t setWeightTenths;
+  int32_t calibrationHundredths;
+  uint8_t scaleMode;
+  uint8_t grindMode;
+  uint16_t checksum;
+};
+
 #define GRINDER_ACTIVE_PIN 33
 
 #define TARE_MIN_INTERVAL 10 * 1000 // auto-tare at most once every 10 seconds
@@ -64,5 +84,23 @@ extern int menuItemsCount;
 extern MenuItem menuItems[];
 extern int currentMenuItem;
 extern int currentSetting;
+
+// Helper functions for safe parameter storage/retrieval
+void saveOffset(double newOffset);
+void saveCupWeight(double newCupWeight);
+void saveSetWeight(double newSetWeight);
+void saveCalibration(double newCalibration);
+void saveScaleMode(bool mode);
+void saveGrindMode(bool mode);
+double loadOffset();
+double loadCupWeight();
+double loadSetWeight();
+double loadCalibration();
+bool loadScaleMode();
+bool loadGrindMode();
+bool validateAndLoadSettings();
+void saveSettingsStructure();
+void resetToDefaults();
+uint16_t calculateChecksum(const ScaleSettings& settings);
 
 void setupScale();
