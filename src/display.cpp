@@ -194,7 +194,7 @@ void updateDisplay( void * parameter) {
     u8g2.clearBuffer();
     if (millis() - lastSignificantWeightChangeAt > SLEEP_AFTER_MS) {
       u8g2.sendBuffer();
-      delay(100);
+      delay(50);
       continue;
     }
 
@@ -298,7 +298,7 @@ void updateDisplay( void * parameter) {
       }
     }
     u8g2.sendBuffer();
-    // delay(100);
+    delay(50);
   }
 }
 

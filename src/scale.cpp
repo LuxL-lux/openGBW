@@ -466,7 +466,7 @@ void updateScale( void * parameter) {
       tareScale();
     }
     if (loadcell.wait_ready_timeout(300)) {
-      lastEstimate = kalmanFilter.updateEstimate(loadcell.get_units(5));
+      lastEstimate = kalmanFilter.updateEstimate(loadcell.get_units(1));
       scaleWeight = lastEstimate;
       scaleLastUpdatedAt = millis();
       weightHistory.push(scaleWeight);
