@@ -287,7 +287,7 @@ void rotary_onButtonClick()
   else if(scaleStatus == STATUS_IN_MENU){
     if(currentMenuItem == 5){
       scaleStatus = STATUS_EMPTY;
-      rotaryEncoder.setAcceleration(100);
+      rotaryEncoder.setAcceleration(150);
       Serial.println("Exited Menu");
     }
     else if (currentMenuItem == 2){
@@ -399,7 +399,15 @@ void rotary_loop()
       }
     else if(scaleStatus == STATUS_IN_MENU){
       int newValue = rotaryEncoder.readEncoder();
-      currentMenuItem = (currentMenuItem + (newValue - encoderValue) * -encoderDir) % menuItemsCount;
+      int encoderDiff = newValue - encoderValue;
+      
+      // Only move one menu item at a time to prevent skipping
+      if (encoderDiff > 0) {
+        currentMenuItem = (currentMenuItem + 1 * encoderDir) % menuItemsCount;
+      } else if (encoderDiff < 0) {
+        currentMenuItem = (currentMenuItem - 1 * encoderDir) % menuItemsCount;
+      }
+      
       currentMenuItem = currentMenuItem < 0 ? menuItemsCount + currentMenuItem : currentMenuItem;
       encoderValue = newValue;
       Serial.println(currentMenuItem);
@@ -652,7 +660,7 @@ void setupScale() {
    * For fine tuning slow down.
    */
   // rotaryEncoder.disableAcceleration(); //acceleration is now enabled by default - disable if you dont need it
-  rotaryEncoder.setAcceleration(200); // or set the value - larger number = more accelearation; 0 or 1 means disabled acceleration
+  rotaryEncoder.setAcceleration(150); // or set the value - larger number = more accelearation; 0 or 1 means disabled acceleration
 
 
   loadcell.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
