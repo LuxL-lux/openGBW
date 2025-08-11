@@ -109,16 +109,9 @@ void saveSetWeight(double newSetWeight) {
   Serial.println(newSetWeight);
 }
 
-void saveCalibration(double newCalibration) {
-  if (newCalibration < 1000 || newCalibration > 50000) {
-    Serial.print("Invalid calibration ");
-    Serial.print(newCalibration);
-    Serial.println(", using default");
-    newCalibration = LOADCELL_SCALE_FACTOR;
-  }
-  
+void saveCalibration(double newCalibration) {  
   preferences.begin("scale", false);
-  preferences.putInt("calibrationHundredths", (int32_t)(newCalibration * 100));
+  preferences.putInt("calibration", (int32_t)(newCalibration * 100));
   preferences.end();
   
   Serial.print("Saved calibration: ");
@@ -188,16 +181,10 @@ double loadSetWeight() {
 
 double loadCalibration() {
   preferences.begin("scale", true);
-  int32_t calibrationHundredths = preferences.getInt("calibrationHundredths", (int32_t)(LOADCELL_SCALE_FACTOR * 100));
+  int32_t calibrationHundredths = preferences.getInt("calibration", (int32_t)(LOADCELL_SCALE_FACTOR * 100));
   preferences.end();
   
   double calibration = calibrationHundredths / 100.0;
-  
-  if (calibration < 1000 || calibration > 50000) {
-    Serial.println("Loaded calibration out of range, using default");
-    calibration = LOADCELL_SCALE_FACTOR;
-    saveCalibration(calibration);
-  }
   
   return calibration;
 }
