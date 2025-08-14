@@ -538,8 +538,8 @@ void scaleStatusLoop(void *p) {
       }
 
       if (
-          millis() - startedGrindingAt > 2000 &&                                  // started grinding at least 2s ago
-          scaleWeight - weightHistory.firstValueOlderThan(millis() - 2000) < 1 && // less than a gram has been grinded in the last 2 second
+          millis() - startedGrindingAt > WEIGHT_CHECK_TIME &&                                  // started grinding at least 2s ago
+          scaleWeight - weightHistory.firstValueOlderThan(millis() - WEIGHT_CHECK_TIME) < 1 && // less than a gram has been grinded in the last 2 second
           !scaleMode)
       {
         Serial.println("Failed because no change in weight was detected");

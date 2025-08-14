@@ -32,7 +32,7 @@ class MenuItem
 #define SIGNIFICANT_WEIGHT_CHANGE 5 // 5 grams changes are used to detect a significant change
 #define COFFEE_DOSE_WEIGHT 18
 #define COFFEE_DOSE_OFFSET -2.5
-#define MAX_GRINDING_TIME 20000 // 20 seconds diff
+#define MAX_GRINDING_TIME 30000 // 20 seconds diff
 #define GRINDING_FAILED_WEIGHT_TO_RESET 150 // force on balance need to be measured to reset grinding
 
 // Parameter validation limits
@@ -43,6 +43,7 @@ class MenuItem
 #define MAX_SET_WEIGHT 100.0
 #define MIN_SET_WEIGHT 5.0
 #define MAX_AUTO_OFFSET_CHANGE 5.0
+#define WEIGHT_CHECK_TIME 3000
 
 // Storage settings structure for data integrity
 struct ScaleSettings {
