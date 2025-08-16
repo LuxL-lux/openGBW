@@ -70,7 +70,7 @@ void saveOffset(double newOffset) {
   }
   
   preferences.begin("scale", false);
-  preferences.putShort("offsetTenths", (int16_t)(newOffset * 10));
+  preferences.putShort("offsetHuns", (int16_t)(newOffset * 100));
   preferences.end();
   
   Serial.print("Saved offset: ");
@@ -132,10 +132,10 @@ void saveGrindMode(bool mode) {
 
 double loadOffset() {
   preferences.begin("scale", true);
-  int16_t offsetTenths = preferences.getShort("offsetTenths", (int16_t)(COFFEE_DOSE_OFFSET * 10));
+  int16_t offsetHuns = preferences.getShort("offsetHuns", (int16_t)(COFFEE_DOSE_OFFSET * 100));
   preferences.end();
   
-  double offset = offsetTenths / 10.0;
+  double offset = offsetHuns / 100.0;
   
   // Validate loaded value
   if (offset < MIN_OFFSET || offset > MAX_OFFSET) {
@@ -581,7 +581,7 @@ void scaleStatusLoop(void *p) {
       else if (currentWeight != setWeight + cupWeightEmpty && millis() - finishedGrindingAt > 1500 && newOffset)
       {
         // Check if weight has been stable for at least 1 second
-        if (ABS(currentWeight - lastStableWeight) < 0.2) {
+        if (ABS(currentWeight - lastStableWeight) < MIN_AUTO_OFFSET_CHANGE) {
           if (lastWeightStableAt == 0) {
             lastWeightStableAt = millis();
             lastStableWeight = currentWeight;
@@ -590,7 +590,7 @@ void scaleStatusLoop(void *p) {
             double weightError = setWeight + cupWeightEmpty - currentWeight;
             
             // Only adjust if error is reasonable (not due to sensor noise or cup removal)
-            if (ABS(weightError) <= MAX_AUTO_OFFSET_CHANGE && ABS(weightError) >= 0.2) {
+            if (ABS(weightError) <= MAX_AUTO_OFFSET_CHANGE && ABS(weightError) >= MIN_AUTO_OFFSET_CHANGE) {
               double proposedOffset = offset + weightError;
               
               // Clamp to reasonable bounds
